@@ -38,4 +38,9 @@ public class Person {
         double years = days / 365.2425; // account for leap years!
         return years;
     }
+
+    public static void main(String[] args) {
+        Person p = new Person("Alice", LocalDate.of(2000, 8, 21));
+        System.out.printf("%s is %.2f years old today.%n", p.getName(), p.getAge());
+    }
 }
