@@ -66,6 +66,11 @@ public class PersonMatcher {
      * @param nameMatcher the matcher for the age feature
      * @return a FeatureMatcher that matches a Person's age
      */
+    // The way to remember this is that the FeatureMatcher takes the Person object, extracts the feature (age in this case), and then applies the provided matcher (nameMatcher) to that feature.
+    // If the feature matches, the matcher succeeds; otherwise, it fails.
+    // The FeatureMatcher is useful for creating custom matchers that operate on specific features of an object, allowing for more readable and maintainable tests.
+    // The FeatureMatcher is a powerful tool for creating custom matchers that operate on specific features
+    // of an object, allowing for more readable and maintainable tests.
     public static Matcher<Person> isYouth(Matcher<? super Double> nameMatcher) {
         return new FeatureMatcher<Person, Double>(nameMatcher, "a person with age", "age") {
             @Override
