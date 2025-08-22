@@ -1,18 +1,23 @@
 package my;
 
 import my.model.Person;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
 
 import static my.matchers.PersonMatcher.hasName;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PersonMatcherTest {
 
     @Test
     public void testPersonMatcher() {
         // Example usage of PersonMatcher
-        Person person = new Person("John");
+        //Person person = new Person("John");
+        Person person = new Person("John", LocalDate.now().minusYears(30).minusDays(90));
 
         // Assuming you have a matcher for Person, e.g., isPersonNamed("John")
         // assertThat(person, isPersonNamed("John"));
@@ -31,9 +36,11 @@ public class PersonMatcherTest {
         // feature (name) from the Person object.
     }
 
+    @Disabled("Temporarily skipping this test–needs investigation")
     @Test
     public void testPersonMatcherWithNameNegativeTest() {
-        Person person = new Person("John");
+        //Person person = new Person("John");
+        Person person = new Person("John", LocalDate.now().minusYears(30).minusDays(90));
         // This test is expected to fail because the person's name is "John", not "Jane".
         // The hasName matcher will check if the name matches "Jane", which it does not
         // and will throw an AssertionError.
@@ -50,4 +57,43 @@ public class PersonMatcherTest {
         // matcher, which will indicate that the expected name was "Jane" but the actual name was "John".
     }
 
+    // Write a negative test for the PersonMatcher for the hasName matcher
+    @Test
+    public void testPersonMatcherNegative() {
+        // Create a Person object with a specific name
+        Person person = new Person("John", LocalDate.now().minusYears(30).minusDays(90));
+        // This test is expected to fail because the person's name is "John", not "Jane".
+        // The hasName matcher will check if the name matches "Jane", which it does not
+        // and will throw an AssertionError.
+        assertThrows(AssertionError.class, () -> {
+            assertThat(person, hasName(is("Jane")));
+        });
+        // This will fail because the person's name is "John", not "Jane".
+        // The hasName matcher will extract the name from the Person object and compare it to "
+        // Jane". Since the names do not match, it will throw an AssertionError.
+        // The test is designed to demonstrate the failure case of the hasName matcher.
+        // If you run this test, it will fail, showing that the person's name was "John" instead of "Jane".
+        // The failure message will indicate that the expected name was "Jane" but the actual name was "John".
+        // This is useful for verifying that the matcher correctly identifies when the name does not match.
+        // If you want to see the failure message,
+        // you can run this test in your IDE or using a test runner.
+    }
+
+    // Negative test: verify the exception message
+    @Test
+    public void testPersonMatcherExceptionMessage() {
+        Person person = new Person("John", LocalDate.now().minusYears(30).minusDays(90));
+        AssertionError error = org.junit.jupiter.api.Assertions.assertThrows(AssertionError.class, () -> {
+            assertThat(person, hasName(is("Jane")));
+        });
+        // Check that the message contains the expected text
+        org.junit.jupiter.api.Assertions.assertTrue(
+                error.getMessage().contains("Expected: a person with name is \"Jane\""),
+                "Exception message should contain expected description"
+        );
+        org.junit.jupiter.api.Assertions.assertTrue(
+                error.getMessage().contains("name was \"John\""),
+                "Exception message should contain actual value"
+        );
+    }
 }
