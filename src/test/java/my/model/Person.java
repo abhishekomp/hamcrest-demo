@@ -19,6 +19,13 @@ public class Person {
     public String getName() { return name; }
     public LocalDate getDateOfBirth() { return dateOfBirth; }
 
+    // toString method for easy printing
+    @Override
+    public String toString() {
+        return String.format("Person [name=%s, dateOfBirth=%s]", name, dateOfBirth);
+        //return "Person{name='" + name + "', dateOfBirth=" + dateOfBirth + '}';
+    }
+
     /**
      * Calculates the age in years as a double (including fractional years, e.g., 25.5).
      * Uses the current date as "now".

@@ -1,5 +1,6 @@
 package my;
 
+import my.matchers.PersonMatcher;
 import my.model.Person;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -8,7 +9,7 @@ import java.time.LocalDate;
 
 import static my.matchers.PersonMatcher.hasName;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PersonMatcherTest {
@@ -95,5 +96,61 @@ public class PersonMatcherTest {
                 error.getMessage().contains("name was \"John\""),
                 "Exception message should contain actual value"
         );
+    }
+
+    // Test for isYouth matcher. Using allOf and greaterThanOrEqualTo, lessThanOrEqualTo
+    @Test
+    public void aTeenPersonShouldPasstheIsYouthTest() {
+        // Create a Person object with a specific age
+        Person teen = new Person("John", LocalDate.now().minusYears(15).minusDays(90));
+        //System.out.println("[Test] Created person with age: " + teen.getAge());
+        System.out.printf("[Test] Created person with age: %f%n", teen.getAge());
+        // Check if the person is a youth (age between 18 and 30)
+        //assertThat(person, hasName(is("John"))); // Ensure the name is correct
+        //assertThat(person, PersonMatcher.isYouth(is(20.0))); // Assuming isYouth
+
+        //assertThat(person, PersonMatcher.isYouth(allOf(greaterThanOrEqualTo(15), lessThanOrEqualTo(21))))); // Assuming isYouth
+        //assertThat(teen, isYouth(allOf(greaterThanOrEqualTo(13), lessThan(20)))); // passes
+        assertThat(teen, PersonMatcher.isYouth(allOf(greaterThanOrEqualTo(15.0), lessThan(21.0)))); // passes
+        // assertThat("apple123", allOf(hasLength(greaterThan(5)), containsPattern("\\d+")));
+        // matcher checks if the age is between 18 and 30
+        // This will pass if the person's age is within the specified range.
+        // If the age is outside the range, it will throw an AssertionError.
+    }
+
+    // Test for isYouth matcher. Using allOf and greaterThanOrEqualTo, lessThanOrEqualTo. An adult person should not pass the isYouth.
+    @Test
+    public void anAdultPersonShouldNotPassTheIsYouthTest() {
+        // Create a Person object with a specific age
+        Person adult = new Person("John", LocalDate.now().minusYears(30).minusDays(90));
+        //System.out.println("[Test] Created person with age: " + adult.getAge());
+        System.out.printf("[Test] Created person with age: %f%n", adult.getAge());
+        // Check if the person is a youth (age between 18 and 30)
+        //assertThat(person, hasName(is("John"))); // Ensure the name is correct
+        //assertThat(person, PersonMatcher.isYouth(is(20.0))); // Assuming isYouth
+
+        //assertThat(person, PersonMatcher.isYouth(allOf(greaterThanOrEqualTo(15), lessThanOrEqualTo(21))))); // Assuming isYouth
+        //assertThat(adult, isYouth(allOf(greaterThanOrEqualTo(13), lessThan(20)))); // passes
+        //assertThat(adult, PersonMatcher.isYouth(allOf(greaterThanOrEqualTo(15.0), lessThan(21.0)))); // passes
+
+        AssertionError assertionError = assertThrows(AssertionError.class, () -> {
+            assertThat(adult, PersonMatcher.isYouth(allOf(greaterThanOrEqualTo(18.0), lessThanOrEqualTo(30.0))));
+        });
+        // Print the exception message
+        System.out.println("Actual exception message: " + assertionError.getMessage());
+
+        // Verify the exception message
+        org.junit.jupiter.api.Assertions.assertTrue(
+                assertionError.getMessage().contains("Expected: a person with age"),
+                "Exception message should contain expected description"
+        );
+/*        org.junit.jupiter.api.Assertions.assertTrue(
+                assertionError.getMessage().contains("age was"),
+                "Exception message should contain actual value"
+        );*/
+        // assertThat("apple123", allOf(hasLength(greaterThan(5)), containsPattern("\\d+")));
+        // matcher checks if the age is between 18 and 30
+        // This will pass if the person's age is within the specified range.
+        // If the age is outside the range, it will throw an AssertionError.
     }
 }

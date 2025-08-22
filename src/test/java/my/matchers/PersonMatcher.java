@@ -43,4 +43,38 @@ public class PersonMatcher {
             }*/
         };
     }
+
+    // You can add more matchers for other features of the Person class
+    // For example, if you want to match by age, you could create a matcher like
+    // hasAge(Matcher<? super Integer> ageMatcher) {
+    //     return new FeatureMatcher<Person, Integer>(ageMatcher, "a person with age", "age") {
+    //         @Override
+    //         protected Integer featureValueOf(Person person) {
+    //             return person.getAge(); // Assuming Person has a getAge() method
+    //         }
+    //     };
+    // }
+    // This would allow you to write tests that check the age of a Person object
+    // using a similar pattern to hasName.
+
+    // You can also create matchers for other features like address, phone number, etc.
+
+    /**
+     * Matcher for a person with a specific age.
+     * This matcher will log all calls to featureValueOf for demonstration purposes.
+     *
+     * @param nameMatcher the matcher for the age feature
+     * @return a FeatureMatcher that matches a Person's age
+     */
+    public static Matcher<Person> isYouth(Matcher<? super Double> nameMatcher) {
+        return new FeatureMatcher<Person, Double>(nameMatcher, "a person with age", "age") {
+            @Override
+            protected Double featureValueOf(Person person) {
+                System.out.println("[FeatureMatcher] Calling featureValueOf for: " + person);
+                Double res = person.getAge();
+                System.out.println("[FeatureMatcher] Extracted feature (age): " + res);
+                return res;
+            }
+        };
+    }
 }
